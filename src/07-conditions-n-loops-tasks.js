@@ -455,8 +455,21 @@ function getCommonDirectoryPath(pathes) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const m1NumRows = m1.length;
+  const m1NumCols = m1[0].length;
+  const m2NumCols = m2[0].length;
+  const res = new Array(m1NumRows);
+  for (let i = 0; i < m1NumRows; i += 1) {
+    res[i] = new Array(m2NumCols);
+    for (let j = 0; j < m2NumCols; j += 1) {
+      res[i][j] = 0;
+      for (let k = 0; k < m1NumCols; k += 1) {
+        res[i][j] += m1[i][k] * m2[k][j];
+      }
+    }
+  }
+  return res;
 }
 
 
@@ -490,10 +503,52 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
-}
+function evaluateTicTacToePosition(position) {
+  const rows = 3;
+  const columns = 3;
 
+  for (let i = 0; i < rows; i += 1) {
+    const set = Array.from(new Set(position[i]));
+    if (set.length === 1 && position[i].length === rows) {
+      if (set[0] !== undefined) {
+        return set[0];
+      }
+    }
+  }
+
+  for (let c = 0; c < columns; c += 1) {
+    const column = [];
+    for (let j = 0; j < columns; j += 1) {
+      column.push(position[j][c]);
+    }
+    const columnSet = Array.from(new Set(column));
+    if (columnSet.length === 1) {
+      if (columnSet[0] !== ' ') {
+        return columnSet[0];
+      }
+    }
+  }
+
+  const leftDiag = [];
+  const rightDiag = [];
+  for (let k = 0; k < rows; k += 1) {
+    leftDiag.push(position[k][k]);
+    rightDiag.push(position[k][position.length - 1 - k]);
+  }
+  const leftDiagSet = Array.from(new Set(leftDiag));
+  if (leftDiagSet.length === 1) {
+    if (leftDiagSet[0] !== ' ') {
+      return leftDiagSet[0];
+    }
+  }
+  const rightDiagSet = Array.from(new Set(rightDiag));
+  if (rightDiagSet.length === 1) {
+    if (rightDiagSet[0] !== ' ') {
+      return rightDiagSet[0];
+    }
+  }
+  return undefined;
+}
 
 module.exports = {
   getFizzBuzz,
